@@ -12,4 +12,4 @@ jobs:
         with:
           node-version: '20'
       - run: npm install --no-save strip-json-comments@3
-      - run: node .github/scripts/validate-config.js
+      - run: node .github/workflows/validate-config.js
