@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/wow-look-at-my/pr-minder/master/schema/pr-minder.schema.json",
   "triggers": [
-    { "approved_by": ["PazerOP"] }
+    { "label": "automerge" }
   ]
 }
