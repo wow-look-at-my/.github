@@ -2,5 +2,9 @@
   "$schema": "https://raw.githubusercontent.com/wow-look-at-my/pr-minder/master/schema/pr-minder.schema.json",
   "triggers": [
     { "label": "automerge" }
-  ]
+  ],
+  "labels": {
+    "autocreate": true,
+    "color": "00ff00"
+  }
 }
