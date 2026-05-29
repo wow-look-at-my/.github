@@ -9,7 +9,7 @@ function walk(dir) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
     if (e.isDirectory()) out.push(...walk(p));
-    else if (p.endsWith('.json')) out.push(p);
+    else if (p.endsWith('.json') || p.endsWith('.jsonc')) out.push(p);
   }
   return out;
 }
