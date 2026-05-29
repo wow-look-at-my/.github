@@ -8,7 +8,7 @@ Org-wide configuration and governance automation for the `wow-look-at-my` org.
 | --- | --- |
 | `.github/config/pr-minder/pr-minder.jsonc` | Org-level [`pr-minder`](https://github.com/wow-look-at-my/pr-minder) config. |
 | `proposed-repo-metadata.json` | Desired descriptions for every repo in the org (source of truth). |
-| `scripts/` | Helper scripts used by the workflows. |
+| `.github/scripts/*.ts` | Logic for the repo-metadata workflows, run via the [`typescript`](https://github.com/wow-look-at-my/actions/tree/master/typescript) action. |
 | `.github/workflows/` | CI + governance workflows. |
 
 ## Repo descriptions: propose -> review -> apply
@@ -20,9 +20,13 @@ edit a repo directly without a human merge in between.
 schedule/manual                      merge to master
       |                                     |
       v                                     v
- Propose workflow  --PR-->  human review  -->  Apply workflow  -->  gh repo edit
+ Propose workflow  --PR-->  human review  -->  Apply workflow  -->  octokit update
  (build JSON)               (edit JSON)        (diff + push)        (each repo)
 ```
+
+Both workflows run their logic as a TypeScript script (`.github/scripts/`) via
+`wow-look-at-my/actions@typescript#latest`, which tsc-validates the script and
+injects `octokit`, `fs`, `core`, and `$` (git) helpers.
 
 ### 1. Propose (`propose-repo-metadata.yml`)
 
@@ -53,7 +57,7 @@ descriptions. The format is:
 ### 3. Apply (`apply-repo-metadata.yml`)
 
 On merge to `master` (when `proposed-repo-metadata.json` changes), it diffs the
-desired descriptions against the live ones and runs `gh repo edit` only for the
+desired descriptions against the live ones and updates (via the API) only the
 repos that changed. Blank descriptions are never pushed. Run it manually with
 **dry run** to preview changes without applying them.
 
@@ -65,8 +69,8 @@ repositories** in the org with:
 
 | Permission | Access | Used for |
 | --- | --- | --- |
-| Repository &rarr; Metadata | Read | listing repos (`gh repo list`) |
-| Repository &rarr; Administration | Read and write | editing descriptions (`gh repo edit`) |
+| Repository &rarr; Metadata | Read | listing org repos |
+| Repository &rarr; Administration | Read and write | editing descriptions |
 
 The propose workflow opens its PR with the built-in `GITHUB_TOKEN` (no extra
 scope needed), so the PAT only needs the two permissions above.

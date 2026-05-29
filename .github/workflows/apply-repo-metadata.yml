@@ -1,8 +1,8 @@
 name: Apply repo metadata
 
 # Actuator workflow: pushes approved descriptions out to each repo. The branch +
-# path filters are deliberate (this writes to production repos) -- it must only
-# run after a proposal PR is merged to master, never on the proposal branch.
+# path filters are deliberate -- it must only run after a proposal PR is merged
+# to master, never on the proposal branch.
 on:
   push:
     branches: [master]
@@ -20,20 +20,11 @@ permissions:
 jobs:
   apply:
     runs-on: ubuntu-latest
-    env:
-      ORG: ${{ github.repository_owner }}
-      # PAT needs Metadata: read + Administration: read and write across the org.
-      GH_TOKEN: ${{ secrets.REPO_METADATA_PAT }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: wow-look-at-my/actions@typescript#latest
         with:
-          node-version: '20'
-
-      - name: Fetch current repo metadata across the org
-        run: gh repo list "$ORG" --no-archived --source --limit 1000 --json name,description > "$RUNNER_TEMP/current-repos.json"
-
-      - name: Apply descriptions
-        env:
-          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
-        run: node scripts/apply-metadata.js proposed-repo-metadata.json "$RUNNER_TEMP/current-repos.json"
+          # PAT needs Metadata: read + Administration: read and write across the org.
+          secrets: ${{ toJSON(secrets) }}
+          inputs: ${{ toJSON(inputs) }}
+          file: .github/scripts/apply-repo-metadata.ts

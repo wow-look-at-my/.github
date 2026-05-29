@@ -14,25 +14,11 @@ permissions:
 jobs:
   propose:
     runs-on: ubuntu-latest
-    env:
-      ORG: ${{ github.repository_owner }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: wow-look-at-my/actions@typescript#latest
         with:
-          node-version: '20'
-
-      # PAT (Metadata: read across the org) is needed to see every repo.
-      - name: Fetch current repo metadata across the org
-        env:
-          GH_TOKEN: ${{ secrets.REPO_METADATA_PAT }}
-        run: gh repo list "$ORG" --no-archived --source --limit 1000 --json name,description > "$RUNNER_TEMP/current-repos.json"
-
-      - name: Update proposed-repo-metadata.json
-        run: node scripts/build-proposed-metadata.js "$RUNNER_TEMP/current-repos.json" proposed-repo-metadata.json
-
-      # The PR is opened against THIS repo, so the default GITHUB_TOKEN suffices.
-      - name: Open or update proposal PR
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash scripts/open-proposal-pr.sh
+          # secrets.REPO_METADATA_PAT (Metadata: read) lists every org repo;
+          # secrets.GITHUB_TOKEN opens the PR against this repo.
+          secrets: ${{ toJSON(secrets) }}
+          file: .github/scripts/propose-repo-metadata.ts
