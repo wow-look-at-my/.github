@@ -12,5 +12,6 @@
 			"create_label_if_missing_in_repo": true,
 			"color": "0075ca"
 		}
-	}
+	},
+	"auto_trigger_workflows": true
 }
