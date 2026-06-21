@@ -12,5 +12,12 @@
 			"create_label_if_missing_in_repo": true,
 			"color": "0075ca"
 		}
+	},
+	"auto_trigger_workflows": true,
+	"auto_open_pr": {
+		"enabled": true
+	},
+	"auto_describe_pr": {
+		"enabled": true
 	}
 }
