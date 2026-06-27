@@ -20,9 +20,9 @@
 	},
 	"auto_trigger_workflows": true,
 	"auto_open_pr": {
-		"enabled": true
+		"enabled": false
 	},
 	"auto_describe_pr": {
-		"enabled": true
+		"enabled": false
 	}
 }
