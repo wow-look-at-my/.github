@@ -23,6 +23,6 @@
 		"enabled": false
 	},
 	"auto_describe_pr": {
-		"enabled": false
+		"enabled": true
 	}
 }
