@@ -21,7 +21,7 @@
 	"auto_trigger_workflows": true,
 	"auto_open_pr": {
 		"enabled": true,
-		"skip_branch_patterns": ["^\\d+\\.\\d+(\\.\\d+)?$", "^\\d+\\.\\d+(\\.\\d+)?-", "^releases?/", "^v\\d+\\.\\d+", "^users/"]
+		"skip_branch_patterns": ["^\\d+\\.\\d+(\\.\\d+)?$", "^\\d+\\.\\d+(\\.\\d+)?-", "^releases?/", "^dev-", "^v\\d+\\.\\d+", "^users/"]
 	},
 	"auto_describe_pr": {
 		"enabled": true
