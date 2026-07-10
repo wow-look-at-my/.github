@@ -25,5 +25,19 @@
 	},
 	"auto_describe_pr": {
 		"enabled": true
+	},
+	// Per-repo overrides: pr-minder merges repos.{repo} field-wise over the
+	// top-level defaults above (only meaningful in this org-level file).
+	"repos": {
+		// UnrealEngine is a fork of a giant upstream -- its branch heads (dev-*,
+		// staging-*, ue5-*, promoted, master, release-engine-*) are upstream branch
+		// families, not work branches. Never auto-open PRs there; skip-pattern
+		// whack-a-mole does not scale to a fork mirror. Other repos keep the
+		// defaults above, and PRs can still be opened manually in UnrealEngine.
+		"UnrealEngine": {
+			"auto_open_pr": {
+				"enabled": false
+			}
+		}
 	}
 }
