@@ -39,6 +39,16 @@
 			"auto_open_pr": {
 				"enabled": false
 			}
+		},
+		// gcc is the same story -- a fork of the giant upstream GCC mirror. Its
+		// branch heads (devel/*, master, trunk, ...) are upstream branch families,
+		// not work branches, and only the releases/* family happens to match a
+		// skip pattern. Never auto-open PRs there; PRs can still be opened
+		// manually.
+		"gcc": {
+			"auto_open_pr": {
+				"enabled": false
+			}
 		}
 	}
 }
