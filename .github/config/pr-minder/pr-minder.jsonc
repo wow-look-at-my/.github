@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/wow-look-at-my/pr-minder/master/schema/pr-minder.schema.json",
+	"$schema": "https://raw.githubusercontent.com/wow-look-at-my/webhooks/master/pr-minder/schema/pr-minder.schema.json",
 	"auto_label_pr": {
 		"auto-pr-update": {
 			"mode": "auto_update",
