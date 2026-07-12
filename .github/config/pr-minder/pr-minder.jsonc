@@ -16,6 +16,16 @@
 			"mode": "merge_conflict",
 			"create_label_if_missing_in_repo": true,
 			"color": "b60205"
+		},
+		"auto-pr-resolve": {
+			// One-shot AI merge-conflict resolution: adding this label to a PR triggers
+			// a single autonomous resolve run (the label is removed immediately -- that
+			// removal is the trigger being consumed; re-add to run another pass).
+			// Handled by the pr-resolve webhook-runner hook via pr-minder's
+			// mode: "auto_resolve" (wow-look-at-my/webhooks#69).
+			"mode": "auto_resolve",
+			"create_label_if_missing_in_repo": true,
+			"color": "8250df"
 		}
 	},
 	"auto_trigger_workflows": true,
