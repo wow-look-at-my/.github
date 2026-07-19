@@ -13,7 +13,7 @@ jobs:
   # validator itself — this replaces the old parse-only script
   # (validate-config.js), which never checked configs against a schema.
   validate-config:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
       - uses: wow-look-at-my/json-validator@master
