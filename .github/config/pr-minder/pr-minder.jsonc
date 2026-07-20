@@ -59,6 +59,12 @@
 			"auto_open_pr": {
 				"enabled": false
 			}
+		},
+		// Merge-train pilot (webhooks#164/#165/#166).
+		"github-state-mirror": {
+			"merge_train": {
+				"enabled": true
+			}
 		}
 	}
 }
