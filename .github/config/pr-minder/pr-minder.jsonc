@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/wow-look-at-my/pr-minder/master/schema/pr-minder.schema.json",
+	"$schema": "https://wow-look-at-my.github.io/webhooks/pr-minder.schema.json",
 	"auto_label_pr": {
 		"auto-pr-update": {
 			"mode": "auto_update",
@@ -16,14 +16,49 @@
 			"mode": "merge_conflict",
 			"create_label_if_missing_in_repo": true,
 			"color": "b60205"
+		},
+		"auto-pr-resolve": {
+			// One-shot AI merge-conflict resolution: adding this label to a PR triggers
+			// a single autonomous resolve run (the label is removed immediately -- that
+			// removal is the trigger being consumed; re-add to run another pass).
+			// Handled by the pr-resolve webhook-runner hook via pr-minder's
+			// mode: "auto_resolve" (wow-look-at-my/webhooks#69).
+			"mode": "auto_resolve",
+			"create_label_if_missing_in_repo": true,
+			"color": "8250df"
 		}
 	},
 	"auto_trigger_workflows": true,
 	"auto_open_pr": {
 		"enabled": true,
-		"skip_branch_patterns": ["^\\d+\\.\\d+(\\.\\d+)?$", "^\\d+\\.\\d+(\\.\\d+)?-", "^releases?/"]
+		"base_from_fork_point": false, // always open auto-PRs against the repo's default branch, never a detected fork-point base
+		"skip_branch_patterns": ["^\\d+\\.\\d+(\\.\\d+)?$", "^\\d+\\.\\d+(\\.\\d+)?-", "^releases?/", "^dev-", "^v\\d+\\.\\d+", "^users/"]
 	},
 	"auto_describe_pr": {
 		"enabled": false
+	},
+	// Per-repo overrides: pr-minder merges repos.{repo} field-wise over the
+	// top-level defaults above (only meaningful in this org-level file).
+	"repos": {
+		// UnrealEngine is a fork of a giant upstream -- its branch heads (dev-*,
+		// staging-*, ue5-*, promoted, master, release-engine-*) are upstream branch
+		// families, not work branches. Never auto-open PRs there; skip-pattern
+		// whack-a-mole does not scale to a fork mirror. Other repos keep the
+		// defaults above, and PRs can still be opened manually in UnrealEngine.
+		"UnrealEngine": {
+			"auto_open_pr": {
+				"enabled": false
+			}
+		},
+		// gcc is the same story -- a fork of the giant upstream GCC mirror. Its
+		// branch heads (devel/*, master, trunk, ...) are upstream branch families,
+		// not work branches, and only the releases/* family happens to match a
+		// skip pattern. Never auto-open PRs there; PRs can still be opened
+		// manually.
+		"gcc": {
+			"auto_open_pr": {
+				"enabled": false
+			}
+		}
 	}
 }
