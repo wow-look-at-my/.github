@@ -59,6 +59,15 @@
 			"auto_open_pr": {
 				"enabled": false
 			}
+		},
+		// Merge-train CANARY. Per-repo on purpose: a top-level merge_train
+		// arms the whole fleet at once, and this feature has never run against
+		// production traffic. webhooks pays the most for the legacy flow
+		// (~N(N-1)/2 full builds to land N armed PRs), so it gains the most.
+		"webhooks": {
+			"merge_train": {
+				"enabled": true
+			}
 		}
 	}
 }
