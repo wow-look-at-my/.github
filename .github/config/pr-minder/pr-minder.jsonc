@@ -68,6 +68,12 @@
 			"merge_train": {
 				"enabled": true
 			}
+		},
+		// Merge-train pilot (webhooks#164/#165/#166).
+		"github-state-mirror": {
+			"merge_train": {
+				"enabled": true
+			}
 		}
 	}
 }
