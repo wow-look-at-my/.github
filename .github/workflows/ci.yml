@@ -4,12 +4,16 @@ on:
   push:
 
 jobs:
+  # Validate every JSON/JSONC config against the JSON schema named in its
+  # own $schema field (currently .github/config/pr-minder/pr-minder.jsonc,
+  # whose schema URL is fetched remotely at validation time). With no
+  # inputs, json-validator auto-discovers all *.json/*.jsonc files that
+  # declare a $schema, so adding a config never means editing this
+  # workflow. JSONC comments and trailing commas are handled by the
+  # validator itself — this replaces the old parse-only script
+  # (validate-config.js), which never checked configs against a schema.
   validate-config:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm install --no-save strip-json-comments@3
-      - run: node .github/workflows/validate-config.js
+      - uses: wow-look-at-my/json-validator@master
