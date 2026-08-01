@@ -33,7 +33,7 @@
 	"auto_open_pr": {
 		"enabled": true,
 		"base_from_fork_point": false, // always open auto-PRs against the repo's default branch, never a detected fork-point base
-		"skip_branch_patterns": ["^\\d+\\.\\d+(\\.\\d+)?$", "^\\d+\\.\\d+(\\.\\d+)?-", "^releases?/", "^dev-", "^v\\d+\\.\\d+", "^users/"]
+		"skip_branch_patterns": ["^\\d+\\.\\d+(\\.\\d+)?$", "^\\d+\\.\\d+(\\.\\d+)?-", "^releases?/", "^dev-", "^v\\d+\\.\\d+", "^users/", "^revert-\\d+-"]
 	},
 	"auto_describe_pr": {
 		"enabled": true
