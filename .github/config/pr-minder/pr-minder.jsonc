@@ -41,34 +41,38 @@
 	// Per-repo overrides: pr-minder merges repos.{repo} field-wise over the
 	// top-level defaults above (only meaningful in this org-level file).
 	"repos": {
-		// UnrealEngine is a fork of a giant upstream. An explicit per-repo
-		// auto_open_pr.enabled: true sets AutoOpenPr.enabledPerRepo (config.ts:
-		// "true only when an EXPLICIT per-repo config source set enabled: true"),
-		// which is an outright BYPASS of the fork guard (handlers.ts: the
-		// p.repository.fork === true && !enabledPerRepo check is skipped). With
-		// the guard bypassed, pr-minder opens PRs for every non-default,
-		// non-skipped branch WITHOUT checking whether the branch also exists
-		// upstream -- so skip_branch_patterns must carry the upstream branch
-		// families (staging-*, ue5-*, promoted, release-engine-*, master) that
-		// the per-branch guard (webhooks PR 211, forkBranchOrigin) would have
-		// skipped as inherited. The top-level patterns are repeated here because
-		// mergeConfig replaces (not appends) skip_branch_patterns from the
-		// override slot.
+		// UnrealEngine is a fork of a giant upstream -- its branch heads (dev-*,
+		// staging-*, ue5-*, promoted, master, release-engine-*) are upstream branch
+		// families, not work branches. Never auto-open PRs there; skip-pattern
+		// whack-a-mole does not scale to a fork mirror. Other repos keep the
+		// defaults above, and PRs can still be opened manually in UnrealEngine.
 		"UnrealEngine": {
 			"auto_open_pr": {
-				"enabled": true,
-				"skip_branch_patterns": ["^\\d+\\.\\d+(\\.\\d+)?$", "^\\d+\\.\\d+(\\.\\d+)?-", "^releases?/", "^dev-", "^v\\d+\\.\\d+", "^users/", "^revert-\\d+-", "^staging-", "^ue4-", "^ue5-", "^promoted$", "^release-engine-", "^master$"]
+				"enabled": false
 			}
 		},
-		// gcc is a fork of the giant upstream GCC mirror. Same explicit per-repo
-		// enable: auto_open_pr.enabled: true sets enabledPerRepo, bypassing the
-		// per-branch fork guard. skip_branch_patterns carries gcc's upstream
-		// branch families (devel/*, trunk, master) plus the top-level patterns
-		// (repeated because mergeConfig replaces, not appends).
+		// gcc is the same story -- a fork of the giant upstream GCC mirror. Its
+		// branch heads (devel/*, master, trunk, ...) are upstream branch families,
+		// not work branches, and only the releases/* family happens to match a
+		// skip pattern. Never auto-open PRs there; PRs can still be opened
+		// manually.
 		"gcc": {
 			"auto_open_pr": {
-				"enabled": true,
-				"skip_branch_patterns": ["^\\d+\\.\\d+(\\.\\d+)?$", "^\\d+\\.\\d+(\\.\\d+)?-", "^releases?/", "^dev-", "^v\\d+\\.\\d+", "^users/", "^revert-\\d+-", "^devel/", "^trunk$", "^master$"]
+				"enabled": false
+			}
+		},
+		// grok-build is a fork of xai-org/grok-build. An explicit per-repo
+		// auto_open_pr.enabled: true sets AutoOpenPr.enabledPerRepo (config.ts:
+		// "true only when an EXPLICIT per-repo config source set enabled: true"),
+		// which bypasses the fork guard entirely (handlers.ts: the
+		// p.repository.fork === true && !enabledPerRepo check is skipped) so
+		// pr-minder auto-opens PRs for this fork's own branches without the
+		// per-branch upstream-inheritance check (webhooks PR 211,
+		// forkBranchOrigin). Unlike UnrealEngine/gcc, grok-build is an active
+		// fork we work in, not an upstream mirror.
+		"grok-build": {
+			"auto_open_pr": {
+				"enabled": true
 			}
 		},
 		// Merge-train CANARY. Per-repo on purpose: a top-level merge_train
