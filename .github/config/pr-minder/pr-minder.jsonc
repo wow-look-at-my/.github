@@ -61,6 +61,20 @@
 				"enabled": false
 			}
 		},
+		// grok-build is a fork of xai-org/grok-build. An explicit per-repo
+		// auto_open_pr.enabled: true sets AutoOpenPr.enabledPerRepo (config.ts:
+		// "true only when an EXPLICIT per-repo config source set enabled: true"),
+		// which bypasses the fork guard entirely (handlers.ts: the
+		// p.repository.fork === true && !enabledPerRepo check is skipped) so
+		// pr-minder auto-opens PRs for this fork's own branches without the
+		// per-branch upstream-inheritance check (webhooks PR 211,
+		// forkBranchOrigin). Unlike UnrealEngine/gcc, grok-build is an active
+		// fork we work in, not an upstream mirror.
+		"grok-build": {
+			"auto_open_pr": {
+				"enabled": true
+			}
+		},
 		// Merge-train CANARY. Per-repo on purpose: a top-level merge_train
 		// arms the whole fleet at once, and this feature has never run against
 		// production traffic. webhooks pays the most for the legacy flow
