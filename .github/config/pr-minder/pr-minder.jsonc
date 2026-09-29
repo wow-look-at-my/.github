@@ -81,13 +81,13 @@
 		// (~N(N-1)/2 full builds to land N armed PRs), so it gains the most.
 		"webhooks": {
 			"merge_train": {
-				"enabled": true
+				"enabled": false
 			}
 		},
 		// Merge-train pilot (webhooks#164/#165/#166).
 		"github-state-mirror": {
 			"merge_train": {
-				"enabled": true
+				"enabled": false
 			}
 		}
 	}
