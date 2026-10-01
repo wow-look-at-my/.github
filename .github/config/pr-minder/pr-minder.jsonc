@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/wow-look-at-my/pr-minder/master/schema/pr-minder.schema.json",
+	"$schema": "https://sites.pazer.build/webhooks/branch/master/pr-minder.schema.json",
 	"auto_label_pr": {
 		"auto-pr-update": {
 			"mode": "auto_update",
@@ -11,13 +11,84 @@
 			"mode": "auto_merge",
 			"create_label_if_missing_in_repo": true,
 			"color": "0075ca"
+		},
+		"merge-conflict": {
+			"mode": "merge_conflict",
+			"create_label_if_missing_in_repo": true,
+			"color": "b60205"
+		},
+		"auto-pr-resolve": {
+			// Sticky AI merge-conflict-resolution lease (pr-minder mode: "auto_resolve",
+			// handled by the pr-resolve webhook-runner hook): the label stays on, and
+			// pr-minder re-triggers a resolve run whenever the PR is conflicted (one
+			// attempt per head SHA). A push to the head branch by anyone other than
+			// pr-minder itself stands it down -- run cancelled, label removed, one
+			// standdown comment -- until the label is re-added (webhooks PR 100).
+			"mode": "auto_resolve",
+			"create_label_if_missing_in_repo": true,
+			"color": "8250df"
 		}
 	},
 	"auto_trigger_workflows": true,
 	"auto_open_pr": {
-		"enabled": true
+		"enabled": true,
+		"base_from_fork_point": false, // always open auto-PRs against the repo's default branch, never a detected fork-point base
+		"skip_branch_patterns": ["^\\d+\\.\\d+(\\.\\d+)?$", "^\\d+\\.\\d+(\\.\\d+)?-", "^releases?/", "^dev-", "^v\\d+\\.\\d+", "^users/", "^revert-\\d+-"]
 	},
 	"auto_describe_pr": {
 		"enabled": true
+	},
+	// Per-repo overrides: pr-minder merges repos.{repo} field-wise over the
+	// top-level defaults above (only meaningful in this org-level file).
+	"repos": {
+		// UnrealEngine is a fork of a giant upstream -- its branch heads (dev-*,
+		// staging-*, ue5-*, promoted, master, release-engine-*) are upstream branch
+		// families, not work branches. Never auto-open PRs there; skip-pattern
+		// whack-a-mole does not scale to a fork mirror. Other repos keep the
+		// defaults above, and PRs can still be opened manually in UnrealEngine.
+		"UnrealEngine": {
+			"auto_open_pr": {
+				"enabled": false
+			}
+		},
+		// gcc is the same story -- a fork of the giant upstream GCC mirror. Its
+		// branch heads (devel/*, master, trunk, ...) are upstream branch families,
+		// not work branches, and only the releases/* family happens to match a
+		// skip pattern. Never auto-open PRs there; PRs can still be opened
+		// manually.
+		"gcc": {
+			"auto_open_pr": {
+				"enabled": false
+			}
+		},
+		// grok-build is a fork of xai-org/grok-build. An explicit per-repo
+		// auto_open_pr.enabled: true sets AutoOpenPr.enabledPerRepo (config.ts:
+		// "true only when an EXPLICIT per-repo config source set enabled: true"),
+		// which bypasses the fork guard entirely (handlers.ts: the
+		// p.repository.fork === true && !enabledPerRepo check is skipped) so
+		// pr-minder auto-opens PRs for this fork's own branches without the
+		// per-branch upstream-inheritance check (webhooks PR 211,
+		// forkBranchOrigin). Unlike UnrealEngine/gcc, grok-build is an active
+		// fork we work in, not an upstream mirror.
+		"grok-build": {
+			"auto_open_pr": {
+				"enabled": true
+			}
+		},
+		// Merge-train CANARY. Per-repo on purpose: a top-level merge_train
+		// arms the whole fleet at once, and this feature has never run against
+		// production traffic. webhooks pays the most for the legacy flow
+		// (~N(N-1)/2 full builds to land N armed PRs), so it gains the most.
+		"webhooks": {
+			"merge_train": {
+				"enabled": false
+			}
+		},
+		// Merge-train pilot (webhooks#164/#165/#166).
+		"github-state-mirror": {
+			"merge_train": {
+				"enabled": false
+			}
+		}
 	}
 }
