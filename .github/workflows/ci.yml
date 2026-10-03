@@ -17,3 +17,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: wow-look-at-my/json-validator@master
+
+  # slopfix reads the default branch's copy at https://sites.pazer.build/github/fork-of.
+  publish-fork-list:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      deployments: write
+      pull-requests: write
+      artifact-metadata: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: wow-look-at-my/buildhost/.github/actions/buildhost-publish-site@master
+        with:
+          project: github
+          branch: ${{ github.ref_name }}
+          source_dir: fork-list
+          public: true
