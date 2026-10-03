@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: wow-look-at-my/json-validator@master
 
-  # slopfix reads the default branch's copy at https://sites.pazer.build/github/fork-of.
+  # slopfix reads the default branch's copy at https://sites.pazer.build/github/fork-of.json.
   publish-fork-list:
     runs-on: ubuntu-latest
     permissions:
@@ -23,6 +23,10 @@ jobs:
       artifact-metadata: write
     steps:
       - uses: actions/checkout@v4
+      - uses: wow-look-at-my/json-validator@master
+        with:
+          files: fork-list/fork-of.json
+          schema: https://raw.githubusercontent.com/wow-look-at-my/slopfix/master/forklist.schema.json
       - uses: wow-look-at-my/buildhost/.github/actions/buildhost-publish-site@master
         with:
           project: github

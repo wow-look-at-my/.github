@@ -1,0 +1,5 @@
+// Each fork GitHub does not record, as OWNER/NAME, mapped to its upstream git URL.
+// slopfix checks only the lines each fork wrote since the newest upstream tag in its history.
+{
+	"wow-look-at-my/gosmopolitan": "https://github.com/golang/go"
+}
