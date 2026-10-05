@@ -4,6 +4,10 @@ on:
   push:
     branches: ['**']
 
+concurrency:
+  group: gha_${{ github.repository }}_${{ github.workflow }}_${{ github.ref != 'refs/heads/master' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
 jobs:
   # Validate every JSON/JSONC config against the JSON schema named in its own $schema field (currently .github/config/pr-minder/pr-minder.jsonc, whose schema URL is fetched remotely at validation time). With no inputs, json-validator auto-discovers all *.json/*.jsonc files that declare a $schema, so adding a config never means editing this workflow. JSONC comments and trailing commas are handled by the validator itself — this replaces the old parse-only script (validate-config.js), which never checked configs against a schema.
   validate-config:
@@ -12,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: wow-look-at-my/json-validator@master
 
-  # slopfix reads the default branch's copy at https://sites.pazer.build/github/fork-of.json.
+  # slopfix reads the default branch's copy at https://sites.pazer.build/dot_github/fork-of.json.
   publish-fork-list:
     runs-on: ubuntu-latest
     permissions:
