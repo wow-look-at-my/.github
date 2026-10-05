@@ -1,5 +1,7 @@
 // Each fork GitHub does not record, as OWNER/NAME, mapped to its upstream git URL.
 // slopfix checks only the lines each fork wrote since the newest upstream tag in its history.
+// With no such tag, the base is the upstream commit whose tree is closest to the fork's.
 {
-	"wow-look-at-my/gosmopolitan": "https://github.com/golang/go"
+	"wow-look-at-my/gosmopolitan": "https://github.com/golang/go",
+	"wow-look-at-my/grok-build": "https://github.com/xai-org/grok-build"
 }
